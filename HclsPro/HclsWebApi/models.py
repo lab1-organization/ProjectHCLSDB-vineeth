@@ -22,6 +22,7 @@ class AdminLogin(models.Model):
     Email = models.EmailField()
     Address = models.CharField(max_length=100)
     AdminType = models.ForeignKey(AdminType, on_delete=models.CASCADE, db_column='AdminType')
+    Status = models.BooleanField(default=False)
 
     def __str__(self):
         return f"{self.Name} ({self.Id})"
@@ -115,3 +116,16 @@ class Patient(models.Model):
 
     class Meta:
         db_table = 'Patient'
+
+class CheckLogin(models.Model):
+    email = models.EmailField(unique=True)
+    username = models.CharField(max_length=100)
+    phone= models.CharField(max_length=20, null=True, blank=True)
+    password = models.CharField(max_length=200)
+    status = models.BooleanField(default=False)
+
+    def __str__(self):
+        return self.email
+    
+    class Meta:
+        db_table = 'CheckLogin'

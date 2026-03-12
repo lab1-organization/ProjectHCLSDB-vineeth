@@ -11,8 +11,8 @@
                     <div class="card-body p-4">
                         <h3 class="card-title mb-3">Sign in to HCLSDB</h3>
 
-                        {% if form.errors %}
-                            <div class="alert alert-danger" role="alert">
+                        {% if errors %}
+                            <div class="alert alert-danger" role="alert">{{error}}
                                 Please correct the errors below.
                             </div>
                         {% endif %}
@@ -20,9 +20,9 @@
                         <form method="post" action="{% url 'login' %}" id="loginForm" novalidate>
                             {% csrf_token %}
                             <div class="mb-3">
-                                <label for="username" class="form-label">Username or email</label>
+                                <label for="username" class="form-label">Email</label>
                                 <input type="text" class="form-control" id="username" name="username" value="{{ request.POST.username|default:'' }}" required autofocus autocomplete="username" aria-describedby="usernameHelp">
-                                <div id="usernameHelp" class="form-text">Use your account username or registered email.</div>
+                                <div id="usernameHelp" class="form-text" style="color: red;">Use your registered email.</div>
                             </div>
 
                             <div class="mb-3 position-relative">
@@ -43,7 +43,7 @@
                             </div>
 
                             <div class="d-flex justify-content-between small">
-                                <div>Don't have an account? <a href="{% url 'signup' %}">Sign up</a></div>
+                                <div>Don't have an account? <a href="{% url 'register' %}">Register</a></div>
                                 <div><a href="#" class="link-secondary">Forgot password?</a></div>
                             </div>
 

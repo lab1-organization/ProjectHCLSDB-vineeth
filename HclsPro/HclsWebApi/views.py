@@ -2,8 +2,8 @@ from django.shortcuts import render
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .Serializer import AdminTypeSerializer, AdminLoginSerializer, DepartmentSerializer, EmployeeSerializer, DoctorSerializer, ReceptionistSerializer, HelperSerializer, PatientSerializer
-from .models import AdminType, AdminLogin, Department, Employee, Doctor, Receptionist, Helper, Patient
+from .Serializer import AdminTypeSerializer, AdminLoginSerializer, DepartmentSerializer, EmployeeSerializer, DoctorSerializer, ReceptionistSerializer, HelperSerializer, PatientSerializer, CheckLoginSerializer
+from .models import AdminType, AdminLogin, Department, Employee, Doctor, Receptionist, Helper, Patient, CheckLogin
 from drf_yasg.utils import swagger_auto_schema
 
 # Create your views here.
@@ -174,3 +174,45 @@ class DeleteAdmin(APIView):
 
         admin.delete()
         return Response({'message': f'Admin ID {Id} deleted successfully'}, status=status.HTTP_200_OK)
+
+
+class RegisterAdmin(APIView):
+
+    def post(self, request):
+        serializer = CheckLoginSerializer(data=request.data)
+
+        if serializer.is_valid():
+            serializer.save()
+            return Response(
+                {"message": "Admin registered successfully. Please wait for activation."},
+                status=status.HTTP_201_CREATED
+            )
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+class AdminLoginAPI(APIView):
+
+    def post(self, request):
+
+        email = request.data.get("Email")
+        password = request.data.get("Password")
+
+        try:
+            admin = AdminLogin.objects.get(Email=email, Password=password)
+
+            if admin.Status == False:
+                return Response({
+                    "message": "Admin not activated",
+                    "admin_id": admin.id,
+                    "status": False
+                })
+
+            return Response({
+                "message": "Login successful",
+                "status": True
+            })
+
+        except AdminLogin.DoesNotExist:
+            return Response({
+                "message": "Invalid credentials. Please register."
+            }, status=404)

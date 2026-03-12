@@ -1,0 +1,688 @@
+{% extends 'Admin/Anonymous/anonybase.html' %}
+{% load static %}
+
+{% block title %}Activate Admin Account - Healthcare Management System{% endblock %}
+
+{% block content %}
+<style>
+  .gradient-bg {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 20px 0;
+  }
+  
+  .activation-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    animation: slideUp 0.6s ease-out;
+    max-width: 600px;
+    margin: auto;
+  }
+  
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .status-badge {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+  
+  .status-inactive {
+    background-color: #fff3cd;
+    color: #856404;
+  }
+  
+  .hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 40px 20px;
+    text-align: center;
+  }
+  
+  .hero-section h1 {
+    margin: 0;
+    font-size: 2rem;
+  }
+  
+  .alert-box {
+    background: #fff3cd;
+    border-left: 4px solid #ffc107;
+    padding: 15px;
+    margin-bottom: 25px;
+    border-radius: 5px;
+    color: #856404;
+  }
+  
+  .activation-form {
+    padding: 40px;
+  }
+  
+  .form-group {
+    margin-bottom: 20px;
+  }
+  
+  .form-group label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .form-group input {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    font-size: 1rem;
+  }
+  
+  .form-group input:focus {
+    outline: none;
+    border-color: #667eea;
+    box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+  }
+  
+  .btn-activate {
+    background: #667eea;
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 5px;
+    font-weight: 600;
+    cursor: pointer;
+    font-size: 1rem;
+    transition: background 0.3s ease;
+    width: 100%;
+  }
+  
+  .btn-activate:hover {
+    background: #764ba2;
+  }
+  
+  .admin-info {
+    background: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    margin-bottom: 25px;
+    border-left: 4px solid #667eea;
+  }
+  
+  .admin-info-label {
+    font-size: 0.85rem;
+    color: #666;
+    margin-bottom: 5px;
+  }
+  
+  .admin-info-value {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #333;
+  }
+  
+  .instruction-box {
+    background: #e7f1ff;
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    border-left: 4px solid #667eea;
+  }
+  
+  .instruction-box p {
+    margin: 0;
+    color: #667eea;
+    font-size: 0.95rem;
+  }
+
+  .error-alert {
+    background: #f8d7da;
+    border-left: 4px solid #dc3545;
+    padding: 15px;
+    border-radius: 5px;
+    color: #721c24;
+    margin-bottom: 20px;
+  }
+</style>
+
+<div class="gradient-bg">
+  <div class="activation-card">
+    <!-- Hero Section -->
+    <div class="hero-section">
+      <h1>⏳ Account Activation Required</h1>
+      <p>Activate your admin account to continue</p>
+    </div>
+
+    <div class="activation-form">
+      <!-- Error Alert -->
+      {% if error %}
+      <div class="error-alert">
+        <strong>❌ Error:</strong> {{ error }}
+      </div>
+      {% endif %}
+
+      <!-- Admin Info Display -->
+      <div class="admin-info">
+        <div class="admin-info-label">Registered Email:</div>
+        <div class="admin-info-value">{{ admin.email }}</div>
+      </div>
+
+      <!-- Alert Box -->
+      <div class="alert-box">
+        <strong>📋 Status:</strong> Your account is currently inactive. Click the button below to activate it.
+      </div>
+
+      <!-- Instruction -->
+      <div class="instruction-box">
+        <p><strong>ℹ️ Note:</strong> Once you activate your account, you'll be able to log in and access the admin dashboard.</p>
+      </div>
+
+      <!-- Activation Form -->
+      <form method="POST" action="{% url 'activate_admin' admin.id %}">
+        {% csrf_token %}
+        
+        <input type="hidden" name="admin_id" value="{{ admin.id }}">
+        
+        <div class="form-group">
+          <label for="confirmPassword">Confirm Your Password:</label>
+          <input 
+            type="password" 
+            id="confirmPassword" 
+            name="password" 
+            required 
+            placeholder="Enter your password to confirm activation"
+            autocomplete="current-password">
+        </div>
+
+        <button type="submit" class="btn-activate">
+          ✓ Activate My Account
+        </button>
+      </form>
+
+      <!-- Back to Login -->
+      <div style="margin-top: 20px; text-align: center;">
+        <p style="color: #666; font-size: 0.9rem;">
+          Remember your credentials? 
+          <a href="{% url 'login' %}" style="color: #667eea; text-decoration: none; font-weight: 600;">
+            Back to Login
+          </a>
+        </p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  .gradient-bg {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    padding: 20px 0;
+  }
+  
+  .activation-card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+    animation: slideUp 0.6s ease-out;
+  }
+  
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(30px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+  
+  .status-badge {
+    display: inline-block;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    margin-bottom: 20px;
+  }
+  
+  .status-inactive {
+    background-color: #fff3cd;
+    color: #856404;
+  }
+  
+  .timeline {
+    position: relative;
+    padding: 20px 0;
+  }
+  
+  .timeline-item {
+    display: flex;
+    margin-bottom: 30px;
+    position: relative;
+  }
+  
+  .timeline-item::before {
+    content: '';
+    position: absolute;
+    left: 20px;
+    top: 50px;
+    width: 2px;
+    height: 30px;
+    background: #ddd;
+  }
+  
+  .timeline-item:last-child::before {
+    display: none;
+  }
+  
+  .timeline-icon {
+    width: 50px;
+    height: 50px;
+    background: #667eea;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 24px;
+    position: relative;
+    z-index: 1;
+    flex-shrink: 0;
+  }
+  
+  .timeline-content {
+    margin-left: 20px;
+    flex: 1;
+  }
+  
+  .timeline-content h5 {
+    margin-top: 0;
+    color: #333;
+    font-weight: 600;
+  }
+  
+  .timeline-content p {
+    color: #666;
+    margin: 5px 0;
+    font-size: 0.95rem;
+  }
+  
+  .faq-section {
+    background: #f8f9fa;
+    padding: 30px;
+    border-radius: 10px;
+    margin-top: 30px;
+  }
+  
+  .accordion-button:not(.collapsed) {
+    background-color: #e7f1ff;
+    color: #667eea;
+  }
+  
+  .accordion-button {
+    color: #333;
+  }
+  
+  .contact-card {
+    background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+    padding: 20px;
+    border-radius: 10px;
+    border-left: 4px solid #667eea;
+    margin-top: 20px;
+  }
+  
+  .badge-info {
+    display: inline-block;
+    padding: 5px 12px;
+    background: #e7f1ff;
+    color: #667eea;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-right: 10px;
+  }
+  
+  .feature-box {
+    text-align: center;
+    padding: 20px;
+    border-radius: 10px;
+    background: #f8f9fa;
+    transition: transform 0.3s ease;
+  }
+  
+  .feature-box:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.1);
+  }
+  
+  .feature-icon {
+    font-size: 2.5rem;
+    margin-bottom: 10px;
+  }
+  
+  .hero-section {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 50px 20px;
+    text-align: center;
+    border-radius: 15px;
+    margin-bottom: 30px;
+  }
+  
+  .support-btn {
+    background: #667eea;
+    border: none;
+    color: white;
+    padding: 12px 30px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background 0.3s ease;
+  }
+  
+  .support-btn:hover {
+    background: #764ba2;
+    color: white;
+  }
+  
+  .btn-group-custom {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+    flex-wrap: wrap;
+  }
+  
+  .alert-custom {
+    border-radius: 10px;
+    border: none;
+    background: #fff3cd;
+    color: #856404;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+</style>
+
+<div class="gradient-bg">
+  <div class="container">
+    <div class="row">
+      <!-- Main Content -->
+      <div class="col-lg-8">
+        <div class="activation-card">
+          <!-- Hero Section -->
+          <div class="hero-section">
+            <h1 class="mb-2">⏳ Account Activation Pending</h1>
+            <p class="mb-0">Your admin account is awaiting system administrator approval</p>
+          </div>
+
+          <div class="card-body p-5">
+            <!-- Status Badge -->
+            <span class="status-badge status-inactive">
+              <i class="fas fa-exclamation-circle"></i> Status: Inactive
+            </span>
+
+            <!-- Alert Section -->
+            <div class="alert-custom">
+              <strong>📋 What's Next?</strong>
+              <p class="mb-0">Your account has been created successfully. A system administrator must review and activate your account before you can access the admin panel.</p>
+            </div>
+
+            <!-- Timeline Section -->
+            <h4 class="mt-4 mb-4">Activation Process Timeline</h4>
+            <div class="timeline">
+              <div class="timeline-item">
+                <div class="timeline-icon">✓</div>
+                <div class="timeline-content">
+                  <h5>Account Created</h5>
+                  <p>Your admin account has been successfully registered in our system.</p>
+                  <small class="text-muted">Completed</small>
+                </div>
+              </div>
+
+              <div class="timeline-item">
+                <div class="timeline-icon">👤</div>
+                <div class="timeline-content">
+                  <h5>Awaiting Administrator Review</h5>
+                  <p>Our system administrator will review your account details and permissions.</p>
+                  <small class="text-muted">In Progress</small>
+                </div>
+              </div>
+
+              <div class="timeline-item">
+                <div class="timeline-icon">📧</div>
+                <div class="timeline-content">
+                  <h5>Notification Email</h5>
+                  <p>You will receive an email notification once your account has been activated.</p>
+                  <small class="text-muted">Pending</small>
+                </div>
+              </div>
+
+              <div class="timeline-item">
+                <div class="timeline-icon">🚀</div>
+                <div class="timeline-content">
+                  <h5>Full Access Granted</h5>
+                  <p>Access the admin dashboard with full privileges for your role.</p>
+                  <small class="text-muted">Pending</small>
+                </div>
+              </div>
+            </div>
+
+            <!-- FAQ Section -->
+            <div class="faq-section">
+              <h4 class="mb-4">❓ Frequently Asked Questions</h4>
+              <div class="accordion" id="faqAccordion">
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq1">
+                      How long does activation typically take?
+                    </button>
+                  </h2>
+                  <div id="faq1" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                      Typical activation time is 24-48 hours. During business hours, it may be faster. You'll receive an email notification once activated.
+                    </div>
+                  </div>
+                </div>
+
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq2">
+                      Can I log in while my account is inactive?
+                    </button>
+                  </h2>
+                  <div id="faq2" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                      No, inactive accounts cannot access the admin panel. You will need to wait for activation. You can still access public sections of the application.
+                    </div>
+                  </div>
+                </div>
+
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq3">
+                      What if my account isn't activated after 48 hours?
+                    </button>
+                  </h2>
+                  <div id="faq3" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                      Please contact our support team immediately. There may have been an issue with your application. Use the support form below to reach out.
+                    </div>
+                  </div>
+                </div>
+
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq4">
+                      What permissions will I have once activated?
+                    </button>
+                  </h2>
+                  <div id="faq4" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                      Your permissions depend on your assigned role (Super Admin, Manager, Operator, etc.). You'll receive detailed information about your access level via email.
+                    </div>
+                  </div>
+                </div>
+
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#faq5">
+                      Is my account information secure?
+                    </button>
+                  </h2>
+                  <div id="faq5" class="accordion-collapse collapse" data-bs-parent="#faqAccordion">
+                    <div class="accordion-body">
+                      Yes, all account information is encrypted and stored securely. We follow industry-standard security practices to protect your data.
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Contact Card -->
+            <div class="contact-card">
+              <h5 class="mb-3">💬 Need Help?</h5>
+              <p class="mb-3">If you have questions or your account hasn't been activated after 48 hours, please reach out to us.</p>
+              <div class="btn-group-custom">
+                <button type="button" class="support-btn" data-bs-toggle="modal" data-bs-target="#supportModal">
+                  📞 Contact Support
+                </button>
+                <a href="{% url 'home' %}" class="support-btn" style="background: #6c757d; text-decoration: none;">
+                  ← Return Home
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Sidebar - Features -->
+      <div class="col-lg-4">
+        <h5 class="mb-3" style="color: white;">Key Features Awaiting You</h5>
+        
+        <div class="feature-box">
+          <div class="feature-icon">📊</div>
+          <h6>Dashboard Analytics</h6>
+          <p class="small">Track system metrics and performance data</p>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-icon">👥</div>
+          <h6>User Management</h6>
+          <p class="small">Manage admin accounts and permissions</p>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-icon">🏥</div>
+          <h6>Patient Records</h6>
+          <p class="small">Access and manage medical records</p>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-icon">📝</div>
+          <h6>Reports</h6>
+          <p class="small">Generate comprehensive system reports</p>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-icon">🔒</div>
+          <h6>Secure Access</h6>
+          <p class="small">Role-based access control</p>
+        </div>
+
+        <div class="feature-box">
+          <div class="feature-icon">⚙️</div>
+          <h6>Settings</h6>
+          <p class="small">Configure system preferences</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Support Modal -->
+<div class="modal fade" id="supportModal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header bg-primary text-white">
+        <h5 class="modal-title">Contact Support</h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body">
+        <form id="supportForm">
+          <div class="mb-3">
+            <label for="emailField" class="form-label">Email Address</label>
+            <input type="email" class="form-control" id="emailField" required>
+          </div>
+          <div class="mb-3">
+            <label for="subjectField" class="form-label">Subject</label>
+            <input type="text" class="form-control" id="subjectField" placeholder="e.g., Account Activation Issue" required>
+          </div>
+          <div class="mb-3">
+            <label for="messageField" class="form-label">Message</label>
+            <textarea class="form-control" id="messageField" rows="4" placeholder="Describe your issue..." required></textarea>
+          </div>
+          <div class="mb-3">
+            <label for="priorityField" class="form-label">Priority</label>
+            <select class="form-select" id="priorityField">
+              <option value="low">Low</option>
+              <option value="medium" selected>Medium</option>
+              <option value="high">High</option>
+            </select>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary" onclick="submitSupport()">Send Support Request</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<script>
+function submitSupport() {
+  const email = document.getElementById('emailField').value;
+  const subject = document.getElementById('subjectField').value;
+  const message = document.getElementById('messageField').value;
+  const priority = document.getElementById('priorityField').value;
+  
+  if (!email || !subject || !message) {
+    alert('Please fill in all fields');
+    return;
+  }
+  
+  console.log('Support request:', { email, subject, message, priority });
+  alert('✓ Support request submitted! We will contact you soon.');
+  document.getElementById('supportForm').reset();
+  const modal = bootstrap.Modal.getInstance(document.getElementById('supportModal'));
+  modal.hide();
+}
+
+// Auto-check activation status (optional)
+function checkActivationStatus() {
+  // This could be connected to an API endpoint
+  console.log('Checking activation status...');
+}
+
+// Check every 5 minutes
+// setInterval(checkActivationStatus, 5 * 60 * 1000);
+</script>
+
+{% endblock %}
