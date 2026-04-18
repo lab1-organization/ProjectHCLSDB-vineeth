@@ -2,7 +2,8 @@ FROM python:3.11-slim
 
 WORKDIR /app
 
-RUN apt-get update && apt-get install -y \
+# reduce memory usage during apt install
+RUN apt-get update && apt-get install -y --no-install-recommends \
     build-essential \
     gcc \
     default-libmysqlclient-dev \
