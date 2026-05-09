@@ -1,4 +1,4 @@
-nname: Kubernetes CI
+name: Kubernetes CI
 on:
   push:
     branches:
