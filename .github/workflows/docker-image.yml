@@ -25,5 +25,5 @@ jobs:
 
       # Step 4: Push Docker image
       - name: Push Docker Image to Docker Hub
-        run: docker push kammana/gha-pyapp:${GITHUB_SHA::7}
+        run: docker push vadlashubam/gha-pyapp:${GITHUB_SHA::7}
 
